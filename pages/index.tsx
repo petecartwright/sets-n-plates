@@ -40,12 +40,11 @@ export default function Home() {
               <select
                 name="bar"
                 onChange={(e) => setBar(+e.currentTarget.value)}
+                defaultValue="45"
               >
                 <option value="15">15</option>
                 <option value="35">35</option>
-                <option value="45" selected>
-                  45
-                </option>
+                <option value="45">45</option>
               </select>
             </div>
             <div>
@@ -54,6 +53,7 @@ export default function Home() {
                 name="weight"
                 onChange={(e) => setWeight(+e.currentTarget.value)}
                 min={bar.toString()}
+                max="1000"
                 defaultValue={bar.toString()}
                 step="2.5"
                 type="number"
