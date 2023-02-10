@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import Home from '.'
+import Home from '../pages'
 
 describe('Main page', () => {
   it('renders without crashing', async () => {
