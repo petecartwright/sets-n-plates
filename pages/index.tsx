@@ -13,12 +13,6 @@ export default function Home() {
   const [weight, setWeight] = useState<number>(45)
   const [plates, setPlates] = useState<string>('')
 
-  function handleWeightChange(event: React.FormEvent<HTMLInputElement>) {
-    const weight = event.currentTarget.value
-    const newPlates = getPlatesForWeight(+weight).toString()
-    setPlates(newPlates)
-  }
-
   useEffect(() => {
     const newPlates = getPlatesForWeight(+weight, +bar).toString()
     setPlates(newPlates)
@@ -38,6 +32,7 @@ export default function Home() {
             <div>
               <label htmlFor="bar">Bar</label>{' '}
               <select
+                id="bar"
                 name="bar"
                 onChange={(e) => setBar(+e.currentTarget.value)}
                 defaultValue="45"
@@ -50,6 +45,7 @@ export default function Home() {
             <div>
               <label htmlFor="weight">Weight</label>{' '}
               <input
+                id="weight"
                 name="weight"
                 onChange={(e) => setWeight(+e.currentTarget.value)}
                 min={bar.toString()}
@@ -60,7 +56,9 @@ export default function Home() {
               />
             </div>
             <div>
-              <span>Use These Plates: {plates}</span>
+              <span>
+                Use These Plates: <span data-testid="plates">{plates}</span>
+              </span>
             </div>
           </form>
         </div>
