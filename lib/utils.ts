@@ -1,7 +1,7 @@
 import invariant from 'tiny-invariant'
 
-// what plates do we have at the gym?
-const AVAILABLE_PLATES = [45, 25, 10, 5, 2.5, 1.25]
+export const DEFAULT_BAR_WEIGHT = 45
+export const DEFAULT_AVAILABLE_PLATES = [45, 25, 10, 5, 2.5, 1.25]
 
 function getHeaviestPlate(
   targetWeight: number,
@@ -22,8 +22,8 @@ function getHeaviestPlate(
 // Function to get a list of plates where the bar + all plates = target weight
 export function getPlatesForWeight(
   targetWeight: number,
-  barWeight = 45,
-  availableWeights = AVAILABLE_PLATES
+  barWeight = DEFAULT_BAR_WEIGHT,
+  availableWeights = DEFAULT_AVAILABLE_PLATES
 ): number[] {
   // Given a
 
@@ -56,24 +56,25 @@ export function getPlatesForWeight(
 
 interface IGetSetsProps {
   availablePlates?: number[]
-  endWeight: number
+  workWeight: number
   numSets?: number
   startWeight: number
 }
 
 export function getSets(props: IGetSetsProps): number[] {
   // function to get the weights for a list of warmup sets and one work set
-
-  let { availablePlates, startWeight, endWeight, numSets } = props
+  console.log('get Sets props', props)
+  let { availablePlates, startWeight, workWeight, numSets } = props
 
   // set defaults if undefined
   numSets = numSets ?? 5
   // also if we have available plates, sort from largest to smallers
-  availablePlates = availablePlates?.sort((a, b) => b - a) ?? AVAILABLE_PLATES
+  availablePlates =
+    availablePlates?.sort((a, b) => b - a) ?? DEFAULT_AVAILABLE_PLATES
   let smallestPlate = availablePlates[availablePlates.length - 1]
 
   // get the diff from start to end
-  const firstToLastDiff = endWeight - startWeight
+  const firstToLastDiff = workWeight - startWeight
 
   // find out how much we need to jump per set to get from start to end
   const step = firstToLastDiff / (numSets - 1)
@@ -83,7 +84,7 @@ export function getSets(props: IGetSetsProps): number[] {
     firstToLastDiff / (numSets - 1) >= smallestPlate * 2,
     'cant make the numbers work bro'
   )
-  invariant(startWeight >= endWeight, 'start weight must be > endweight')
+  invariant(startWeight <= workWeight, 'start weight must be < workWeight')
 
   // we can't be sure that we can actually achieve `step` with the weights we have
   // so we need to make sure it's reachable by at least the smallest plate on each side
@@ -97,9 +98,9 @@ export function getSets(props: IGetSetsProps): number[] {
     sets.push(startWeight + adjustedStep * i)
   }
 
-  // the work set will always be at the endweight
+  // the work set will always be at the workWeight
   // this will sometimes mean that the last jump is different
   // than the exact average, but it's OK. I promise.
-  sets.push(endWeight)
+  sets.push(workWeight)
   return sets
 }
