@@ -1,6 +1,5 @@
 import Head from 'next/head'
 
-import styles from '@/styles/Home.module.css'
 import { useEffect, useState } from 'react'
 import { getPlatesForWeight, getSets } from '@/lib/utils'
 
@@ -42,8 +41,8 @@ export default function SetsPage() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className={styles.container}>
+      <main>
+        <div>
           SETS
           <form>
             <div>
@@ -60,7 +59,7 @@ export default function SetsPage() {
               </select>
             </div>
             <div>
-              <label htmlFor="weigstartWeightht"> Start Weight</label>{' '}
+              <label htmlFor="startWeight"> Start Weight</label>{' '}
               <input
                 id="startWeight"
                 name="startWeight"
@@ -90,10 +89,7 @@ export default function SetsPage() {
                 ? setsWithPlates.map((set) => {
                     console.log('set.plates', set.plates)
                     return (
-                      <div
-                        key={set.weight}
-                        className={styles.weightPlateContainer}
-                      >
+                      <div key={set.weight} className="weightPlateContainer">
                         <div>Weight: {set.weight}</div>
                         <div>{set.plates.join(', ')}</div>
                       </div>
