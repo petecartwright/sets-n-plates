@@ -1,20 +1,19 @@
 import Head from 'next/head'
-import { Inter } from '@next/font/google'
-import styles from '@/styles/Home.module.css'
-import { getPlatesForWeight } from '@/lib/utils'
-import { useEffect, useState } from 'react'
-
-const inter = Inter({ subsets: ['latin'] })
+import { useRouter } from 'next/router'
+import { useState } from 'react'
 
 export default function Home() {
+  const router = useRouter()
+
   const [bar, setBar] = useState<number>(45)
   const [weight, setWeight] = useState<number>(45)
   const [plates, setPlates] = useState<string>('')
 
-  useEffect(() => {
-    const newPlates = getPlatesForWeight(+weight, +bar).toString()
-    setPlates(newPlates)
-  }, [weight, bar])
+  function handleSubmit(e: React.SyntheticEvent) {
+    e.preventDefault()
+    const newUrl = `plates/${weight}?bar=${bar}`
+    router.push(newUrl)
+  }
 
   return (
     <>
@@ -23,9 +22,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className={styles.container}>
-          <form>
+      <main>
+        <form onSubmit={handleSubmit}>
+          <div>
             <div>
               <label htmlFor="bar">Bar</label>{' '}
               <select
@@ -42,6 +41,7 @@ export default function Home() {
             <div>
               <label htmlFor="weight">Weight</label>{' '}
               <input
+                className="w-full appearance-none rounded-md py-2 pl-10 text-sm leading-6 text-slate-900 placeholder-slate-400 shadow-sm ring-1 ring-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 id="weight"
                 name="weight"
                 onChange={(e) => setWeight(+e.currentTarget.value)}
@@ -52,13 +52,9 @@ export default function Home() {
                 type="number"
               />
             </div>
-            <div>
-              <span>
-                Use These Plates: <span data-testid="plates">{plates}</span>
-              </span>
-            </div>
-          </form>
-        </div>
+            <button type="submit">what is it</button>
+          </div>
+        </form>
       </main>
     </>
   )
