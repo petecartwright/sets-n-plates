@@ -2,6 +2,7 @@ import invariant from 'tiny-invariant'
 
 export const DEFAULT_BAR_WEIGHT = 45
 export const DEFAULT_AVAILABLE_PLATES = [45, 25, 10, 5, 2.5, 1.25]
+const MAX_ALLOWED_WEIGHT = 1000
 
 function getHeaviestPlate(
   targetWeight: number,
@@ -12,9 +13,8 @@ function getHeaviestPlate(
       return plate
     }
   }
-  // we won't actually get here as written bc we
-  // check in getPlatesForWeight that this function will return a value,
-  // but this makes ts happy
+  // we won't actually get here as written bc we check in getPlatesForWeight
+  // that this function will return a value, but this makes ts happy
   /* istanbul ignore next -- @preserve */
   return 0
 }
@@ -25,16 +25,17 @@ export function getPlatesForWeight(
   barWeight = DEFAULT_BAR_WEIGHT,
   availableWeights = DEFAULT_AVAILABLE_PLATES
 ): number[] {
-  // Given a
-
   // make sure availableWeights is sorted descending so we can start with bigger weights
   availableWeights.sort((a, b) => b - a)
 
   // just to make sure no one gets too strong or makes our Big O too big
-  if (targetWeight > 1000) return []
+  invariant(targetWeight <= 1000, `max allowed weight is ${MAX_ALLOWED_WEIGHT}`)
 
-  // if we have an empty bar or less weight than the bar
-  if (targetWeight <= barWeight) return []
+  // throw if we have less weight than the bar
+  invariant(
+    targetWeight >= barWeight,
+    `targetWeight must be higher than the bar weight`
+  )
 
   // we load the same plates on each side of the bar, so
   let oneSideWeight = (targetWeight - barWeight) / 2
@@ -63,11 +64,11 @@ interface IGetSetsProps {
 
 export function getSets(props: IGetSetsProps): number[] {
   // function to get the weights for a list of warmup sets and one work set
-  console.log('get Sets props', props)
   let { availablePlates, startWeight, workWeight, numSets } = props
 
   // set defaults if undefined
   numSets = numSets ?? 5
+
   // also if we have available plates, sort from largest to smallers
   availablePlates =
     availablePlates?.sort((a, b) => b - a) ?? DEFAULT_AVAILABLE_PLATES
@@ -98,9 +99,8 @@ export function getSets(props: IGetSetsProps): number[] {
     sets.push(startWeight + adjustedStep * i)
   }
 
-  // the work set will always be at the workWeight
-  // this will sometimes mean that the last jump is different
-  // than the exact average, but it's OK. I promise.
+  // the work set will always be at the workWeight. this will sometimes mean that
+  // the last jump is different than the exact average, but it's OK. I promise.
   sets.push(workWeight)
   return sets
 }

@@ -1,19 +1,19 @@
 import Head from 'next/head'
-import { Inter } from '@next/font/google'
-import { getPlatesForWeight } from '@/lib/utils'
-import { useEffect, useState } from 'react'
-
-const inter = Inter({ subsets: ['latin'] })
+import { useRouter } from 'next/router'
+import { useState } from 'react'
 
 export default function Home() {
+  const router = useRouter()
+
   const [bar, setBar] = useState<number>(45)
   const [weight, setWeight] = useState<number>(45)
   const [plates, setPlates] = useState<string>('')
 
-  useEffect(() => {
-    const newPlates = getPlatesForWeight(+weight, +bar).join(', ')
-    setPlates(newPlates)
-  }, [weight, bar])
+  function handleSubmit(e: React.SyntheticEvent) {
+    e.preventDefault()
+    const newUrl = `plates/${weight}?bar=${bar}`
+    router.push(newUrl)
+  }
 
   return (
     <>
@@ -23,10 +23,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div className="flex items-center justify-between">
-          <form>
+        <form onSubmit={handleSubmit}>
+          <div>
             <div>
-              <h1 className="font-semibold text-slate-900">Just the Plates</h1>
               <label htmlFor="bar">Bar</label>{' '}
               <select
                 id="bar"
@@ -42,7 +41,7 @@ export default function Home() {
             <div>
               <label htmlFor="weight">Weight</label>{' '}
               <input
-                className="focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none w-full text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md py-2 pl-10 ring-1 ring-slate-200 shadow-sm"
+                className="w-full appearance-none rounded-md py-2 pl-10 text-sm leading-6 text-slate-900 placeholder-slate-400 shadow-sm ring-1 ring-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 id="weight"
                 name="weight"
                 onChange={(e) => setWeight(+e.currentTarget.value)}
@@ -53,13 +52,9 @@ export default function Home() {
                 type="number"
               />
             </div>
-            <div>
-              <span>
-                Use These Plates: <span data-testid="plates">{plates}</span>
-              </span>
-            </div>
-          </form>
-        </div>
+            <button type="submit">what is it</button>
+          </div>
+        </form>
       </main>
     </>
   )

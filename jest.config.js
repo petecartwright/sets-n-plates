@@ -24,7 +24,7 @@ const customJestConfig = {
   },
   testEnvironment: 'jest-environment-jsdom',
   collectCoverage: true,
-  collectCoverageFrom: ['./lib/**', './pages/**', './components/**'],
+  collectCoverageFrom: ['./src/**'],
   coverageThreshold: {
     global: {
       branches: 90,
