@@ -30,12 +30,12 @@ export function Set(props: ISetProps) {
 
   return (
     <div className={styles.wrapper}>
-      <button type="button" onClick={() => bumpWeight('up')}>
-        +
-      </button>
-      <div>Weight: {newWeight}</div>
       <button type="button" onClick={() => bumpWeight('down')}>
         -
+      </button>
+      <div>Weight: {newWeight}</div>
+      <button type="button" onClick={() => bumpWeight('up')}>
+        +
       </button>
       <Plates plates={plates} />
     </div>
