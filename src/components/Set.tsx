@@ -6,7 +6,7 @@ import styles from './Set.module.css'
 interface ISetProps {
   targetWeight: number
 
-  availablePlates?: number
+  availablePlates?: number[]
   barWeight?: number
 }
 
@@ -17,11 +17,14 @@ export function Set(props: ISetProps) {
   const [plates, setPlates] = useState<number[]>([])
 
   useEffect(() => {
-    // get the plates for this weight but
-    const plates = getPlatesForWeight(newWeight, barWeight)
+    const plates = getPlatesForWeight({
+      targetWeight: newWeight,
+      barWeight,
+      availablePlates,
+    })
 
     setPlates(plates)
-  }, [newWeight, barWeight])
+  }, [newWeight, barWeight, availablePlates])
 
   function bumpWeight(bump: 'up' | 'down') {
     if (bump === 'up') setNewWeight(newWeight + 2.5)
@@ -30,11 +33,19 @@ export function Set(props: ISetProps) {
 
   return (
     <div className={styles.wrapper}>
-      <button type="button" onClick={() => bumpWeight('down')}>
+      <button
+        className={styles.button}
+        type="button"
+        onClick={() => bumpWeight('down')}
+      >
         -
       </button>
       <div>Weight: {newWeight}</div>
-      <button type="button" onClick={() => bumpWeight('up')}>
+      <button
+        className={styles.button}
+        type="button"
+        onClick={() => bumpWeight('up')}
+      >
         +
       </button>
       <Plates plates={plates} />
