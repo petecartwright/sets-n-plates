@@ -5,13 +5,13 @@ import { useState } from 'react'
 export default function Home() {
   const router = useRouter()
 
-  const [bar, setBar] = useState<number>(45)
-  const [weight, setWeight] = useState<number>(45)
+  const [barWeight, setBarWeight] = useState<number>(45)
+  const [targetWeight, setTargetWeight] = useState<number>(45)
   const [plates, setPlates] = useState<string>('')
 
   function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault()
-    const newUrl = `plates/${weight}?bar=${bar}`
+    const newUrl = `plates/${targetWeight}?bar=${barWeight}`
     router.push(newUrl)
   }
 
@@ -26,11 +26,11 @@ export default function Home() {
         <form onSubmit={handleSubmit}>
           <div>
             <div>
-              <label htmlFor="bar">Bar</label>{' '}
+              <label htmlFor="barWeight">Bar</label>{' '}
               <select
-                id="bar"
-                name="bar"
-                onChange={(e) => setBar(+e.currentTarget.value)}
+                id="barWeight"
+                name="barWeight"
+                onChange={(e) => setBarWeight(+e.currentTarget.value)}
                 defaultValue="45"
               >
                 <option value="15">15</option>
@@ -39,15 +39,14 @@ export default function Home() {
               </select>
             </div>
             <div>
-              <label htmlFor="weight">Weight</label>{' '}
+              <label htmlFor="targetWeight">Weight</label>{' '}
               <input
-                className="w-full appearance-none rounded-md py-2 pl-10 text-sm leading-6 text-slate-900 placeholder-slate-400 shadow-sm ring-1 ring-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                id="weight"
-                name="weight"
-                onChange={(e) => setWeight(+e.currentTarget.value)}
-                min={bar.toString()}
+                id="targetWeight"
+                name="targetWeight"
+                onChange={(e) => setTargetWeight(+e.currentTarget.value)}
+                min={barWeight.toString()}
                 max="1000"
-                defaultValue={bar.toString()}
+                defaultValue={barWeight.toString()}
                 step="2.5"
                 type="number"
               />
