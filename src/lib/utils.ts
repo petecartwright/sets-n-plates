@@ -1,8 +1,9 @@
 import invariant from 'tiny-invariant'
-
-export const DEFAULT_BAR_WEIGHT = 45
-export const DEFAULT_AVAILABLE_PLATES = [45, 25, 10, 5, 2.5, 1.25]
-const MAX_ALLOWED_WEIGHT = 1000
+import {
+  DEFAULT_AVAILABLE_PLATES,
+  DEFAULT_BAR_WEIGHT,
+  MAX_ALLOWED_WEIGHT,
+} from 'src/common/consts'
 
 interface IGetHeaviestPlate {
   targetWeight: number
@@ -47,7 +48,10 @@ export function getPlatesForWeight({
   availablePlates.sort((a, b) => b - a)
 
   // just to make sure no one gets too strong or makes our Big O too big
-  invariant(targetWeight <= 1000, `max allowed weight is ${MAX_ALLOWED_WEIGHT}`)
+  invariant(
+    targetWeight <= MAX_ALLOWED_WEIGHT,
+    `max allowed weight is ${MAX_ALLOWED_WEIGHT}`
+  )
 
   // throw if we have less weight than the bar
   invariant(

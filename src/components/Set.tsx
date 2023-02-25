@@ -1,5 +1,6 @@
+import { MAX_ALLOWED_WEIGHT } from '@/common/consts'
 import { getPlatesForWeight } from '@/lib/utils'
-import { SyntheticEvent, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Plates } from './Plates'
 import styles from './Set.module.css'
 
@@ -27,7 +28,9 @@ export function Set(props: ISetProps) {
   }, [newWeight, barWeight, availablePlates])
 
   function bumpWeight(bump: 'up' | 'down') {
-    if (bump === 'up') setNewWeight(newWeight + 2.5)
+    if (bump === 'up') {
+      if (newWeight + 2.5 <= MAX_ALLOWED_WEIGHT) setNewWeight(newWeight + 2.5)
+    }
     if (bump === 'down') setNewWeight(newWeight - 2.5)
   }
 
