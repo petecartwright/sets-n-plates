@@ -24,11 +24,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     return
   }
 
-  const plates = getPlatesForWeight(
-    formattedQuery.weight,
-    formattedQuery.barWeight,
-    formattedQuery.availablePlates
-  )
+  const plates = getPlatesForWeight({
+    targetWeight: formattedQuery.weight,
+    barWeight: formattedQuery.barWeight,
+    availablePlates: formattedQuery.availablePlates,
+  })
 
   res.status(200).json(plates)
 }
