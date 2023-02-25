@@ -6,15 +6,18 @@ import { useState } from 'react'
 
 export default function Plates() {
   const router = useRouter()
-  const { weight, bar, availablePlates } = router.query
+  const { targetWeight, barWeight, availablePlates } = router.query
 
   const [plates, setPlates] = useState<string>('')
   const [errorText, setErrorText] = useState<string>('')
 
-  if (weight && !plates && !errorText) {
-    invariant(typeof weight === 'string', 'missing weight')
+  if (targetWeight && !plates && !errorText) {
+    invariant(typeof targetWeight === 'string', 'missing targetWeight')
     let platesForWeight: string
-    platesForWeight = getPlatesForWeight({ targetWeight: +weight }).join(' | ')
+    // TODO - should be using bar and available plates here??
+    platesForWeight = getPlatesForWeight({ targetWeight: +targetWeight }).join(
+      ' | '
+    )
     if (platesForWeight) {
       setPlates(platesForWeight)
     } else {
@@ -33,7 +36,7 @@ export default function Plates() {
 
       {!errorText ? (
         <div>
-          <div>Weight: {weight}</div>
+          <div>Weight: {targetWeight}</div>
           <br />
           {/* // TODO - this should be a Plates component */}
           <div>

@@ -1,13 +1,13 @@
 import invariant from 'tiny-invariant'
 
 interface IFormatPlateQueryArgs {
-  weight: string | string[]
+  targetWeight: string | string[]
   availablePlates?: string | string[]
   barWeight?: string | string[]
 }
 
 interface IFormattedPlateQuery {
-  weight: number
+  targetWeight: number
   availablePlates?: number[]
   barWeight?: number
 }
@@ -15,15 +15,18 @@ interface IFormattedPlateQuery {
 export function formatPlateQuery(
   args: IFormatPlateQueryArgs
 ): IFormattedPlateQuery {
-  const { availablePlates, barWeight, weight } = args
+  const { availablePlates, barWeight, targetWeight } = args
 
-  let weightFormatted: number
+  let targetWeightFormatted: number
   let barWeightFormatted: number | undefined
   let availablePlatesFormatted: number[] | undefined
 
-  invariant(typeof weight === 'string', 'weight must be a string')
-  weightFormatted = Number(weight)
-  invariant(!isNaN(weightFormatted), 'weight must be convertible to a number')
+  invariant(typeof targetWeight === 'string', 'targetWeight must be a string')
+  targetWeightFormatted = Number(targetWeight)
+  invariant(
+    !isNaN(targetWeightFormatted),
+    'targetWeight must be convertible to a number'
+  )
 
   if (barWeight) {
     invariant(typeof barWeight === 'string', 'bar weight must be a string')
@@ -56,7 +59,7 @@ export function formatPlateQuery(
   }
 
   return {
-    weight: weightFormatted,
+    targetWeight: targetWeightFormatted,
     barWeight: barWeightFormatted,
     availablePlates: availablePlatesFormatted,
   }

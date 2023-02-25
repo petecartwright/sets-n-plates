@@ -16,7 +16,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     formattedQuery = formatPlateQuery({
       barWeight,
-      weight: targetWeight,
+      targetWeight,
       availablePlates,
     })
   } catch {
@@ -25,7 +25,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   const plates = getPlatesForWeight({
-    targetWeight: formattedQuery.weight,
+    targetWeight: formattedQuery.targetWeight,
     barWeight: formattedQuery.barWeight,
     availablePlates: formattedQuery.availablePlates,
   })
