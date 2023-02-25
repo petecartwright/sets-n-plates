@@ -4,11 +4,29 @@ export const DEFAULT_BAR_WEIGHT = 45
 export const DEFAULT_AVAILABLE_PLATES = [45, 25, 10, 5, 2.5, 1.25]
 const MAX_ALLOWED_WEIGHT = 1000
 
-function getHeaviestPlate(
-  targetWeight: number,
-  availableWeights: number[]
-): number {
-  for (let plate of availableWeights) {
+interface IGetHeaviestPlate {
+  targetWeight: number
+  availablePlates?: number[]
+}
+
+interface IGetPlatesForWeight {
+  targetWeight: number
+  barWeight?: number
+  availablePlates?: number[]
+}
+
+interface IGetSetsProps {
+  availablePlates?: number[]
+  workWeight: number
+  numSets?: number
+  startWeight: number
+}
+
+function getHeaviestPlate({
+  targetWeight,
+  availablePlates = DEFAULT_AVAILABLE_PLATES,
+}: IGetHeaviestPlate): number {
+  for (let plate of availablePlates) {
     if (plate <= targetWeight) {
       return plate
     }
@@ -20,13 +38,13 @@ function getHeaviestPlate(
 }
 
 // Function to get a list of plates where the bar + all plates = target weight
-export function getPlatesForWeight(
-  targetWeight: number,
+export function getPlatesForWeight({
+  targetWeight,
   barWeight = DEFAULT_BAR_WEIGHT,
-  availableWeights = DEFAULT_AVAILABLE_PLATES
-): number[] {
+  availablePlates = DEFAULT_AVAILABLE_PLATES,
+}: IGetPlatesForWeight): number[] {
   // make sure availableWeights is sorted descending so we can start with bigger weights
-  availableWeights.sort((a, b) => b - a)
+  availablePlates.sort((a, b) => b - a)
 
   // just to make sure no one gets too strong or makes our Big O too big
   invariant(targetWeight <= 1000, `max allowed weight is ${MAX_ALLOWED_WEIGHT}`)
@@ -42,36 +60,33 @@ export function getPlatesForWeight(
 
   // Make sure the oneSideWeight is acheivable with our weights
   // if we can modulo it for the smallest weight, we can do it for sure
-  const smallestWeight = availableWeights[availableWeights.length - 1]
+  const smallestWeight = availablePlates[availablePlates.length - 1]
   if (oneSideWeight % smallestWeight !== 0) return []
 
   const plates: number[] = []
   while (oneSideWeight > 0) {
     // find the heaviest plate that fits the current weight
-    let heaviestPlate = getHeaviestPlate(oneSideWeight, availableWeights)
+    let heaviestPlate = getHeaviestPlate({
+      targetWeight: oneSideWeight,
+      availablePlates,
+    })
     plates.push(heaviestPlate)
     oneSideWeight = oneSideWeight - heaviestPlate
   }
   return plates
 }
 
-interface IGetSetsProps {
-  availablePlates?: number[]
-  workWeight: number
-  numSets?: number
-  startWeight: number
-}
-
-export function getSets(props: IGetSetsProps): number[] {
+export function getSets({
+  availablePlates = DEFAULT_AVAILABLE_PLATES,
+  numSets = 5,
+  startWeight,
+  workWeight,
+}: IGetSetsProps): number[] {
   // function to get the weights for a list of warmup sets and one work set
-  let { availablePlates, startWeight, workWeight, numSets } = props
-
-  // set defaults if undefined
-  numSets = numSets ?? 5
 
   // also if we have available plates, sort from largest to smallers
-  availablePlates =
-    availablePlates?.sort((a, b) => b - a) ?? DEFAULT_AVAILABLE_PLATES
+  availablePlates = availablePlates.sort((a, b) => b - a)
+
   let smallestPlate = availablePlates[availablePlates.length - 1]
 
   // get the diff from start to end

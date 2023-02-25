@@ -14,7 +14,7 @@ export function Plates(props: IPlatesProps) {
       {formattedPlates ? (
         <span>Plates: {formattedPlates}</span>
       ) : (
-        <span>empty bar</span>
+        <span>empty bar!</span>
       )}
     </div>
   )
