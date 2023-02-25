@@ -14,7 +14,7 @@ export default function Plates() {
   if (weight && !plates && !errorText) {
     invariant(typeof weight === 'string', 'missing weight')
     let platesForWeight: string
-    platesForWeight = getPlatesForWeight(+weight).join(', ')
+    platesForWeight = getPlatesForWeight({ targetWeight: +weight }).join(' | ')
     if (platesForWeight) {
       setPlates(platesForWeight)
     } else {
@@ -35,6 +35,7 @@ export default function Plates() {
         <div>
           <div>Weight: {weight}</div>
           <br />
+          {/* // TODO - this should be a Plates component */}
           <div>
             Use These Plates: <span data-testid="plates">{plates}</span>
           </div>
