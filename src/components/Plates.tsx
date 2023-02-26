@@ -12,7 +12,7 @@ export function Plates(props: IPlatesProps) {
   return (
     <div className={styles.plates}>
       {formattedPlates ? (
-        <span>Plates: {formattedPlates}</span>
+        <span>{formattedPlates}</span>
       ) : (
         <span>empty bar!</span>
       )}
