@@ -6,9 +6,9 @@ import styles from './Set.module.css'
 
 interface ISetProps {
   targetWeight: number
+  barWeight: number
 
   availablePlates?: number[]
-  barWeight?: number
 }
 
 export function Set(props: ISetProps) {
@@ -31,7 +31,9 @@ export function Set(props: ISetProps) {
     if (bump === 'up') {
       if (newWeight + 2.5 <= MAX_ALLOWED_WEIGHT) setNewWeight(newWeight + 2.5)
     }
-    if (bump === 'down') setNewWeight(newWeight - 2.5)
+    if (bump === 'down') {
+      if (newWeight - 2.5 >= barWeight) setNewWeight(newWeight - 2.5)
+    }
   }
 
   return (
