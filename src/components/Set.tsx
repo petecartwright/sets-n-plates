@@ -38,22 +38,26 @@ export function Set(props: ISetProps) {
 
   return (
     <div className={styles.wrapper}>
-      <button
-        className={styles.button}
-        type="button"
-        onClick={() => bumpWeight('down')}
-      >
-        -
-      </button>
-      <div>Weight: {newWeight}</div>
-      <button
-        className={styles.button}
-        type="button"
-        onClick={() => bumpWeight('up')}
-      >
-        +
-      </button>
-      <Plates plates={plates} />
+      <div className={styles['weightContainer']}>
+        <button
+          className={styles.button}
+          type="button"
+          onClick={() => bumpWeight('down')}
+        >
+          -
+        </button>
+        <div>{newWeight}</div>
+        <button
+          className={styles.button}
+          type="button"
+          onClick={() => bumpWeight('up')}
+        >
+          +
+        </button>
+      </div>
+      <div className={styles['platesContainer']}>
+        <Plates plates={plates} />
+      </div>
     </div>
   )
 }
