@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import { Set } from '@/components/Set'
-import { SyntheticEvent, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getSets } from '@/lib/utils'
-import { MAX_ALLOWED_WEIGHT } from '@/common/consts'
+import { BAR_WEIGHT_OPTIONS, MAX_ALLOWED_WEIGHT } from '@/common/consts'
 
 export default function SetsPage() {
   const [barWeight, setBarWeight] = useState<number>(45)
@@ -11,6 +11,9 @@ export default function SetsPage() {
   const [sets, setSets] = useState<number[]>([])
 
   useEffect(() => {
+    console.log(
+      `in useEffect, startWeight: ${startWeight}, workWeight: ${workWeight} `
+    )
     try {
       let sets = getSets({ startWeight: startWeight, workWeight: workWeight })
       setSets(sets)
@@ -18,6 +21,15 @@ export default function SetsPage() {
       console.log(err)
     }
   }, [barWeight, startWeight, workWeight])
+
+  function handleBarWeightChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    const newBarWeight = Number(e.currentTarget.value)
+    setBarWeight(newBarWeight)
+
+    // if the other fields need
+    //
+    // TODO - would be nice to throw an error here? maybe add form validation?
+  }
 
   function handleStartWeightChange(e: React.ChangeEvent<HTMLInputElement>) {
     // can't trust the input to handle the max value
@@ -53,12 +65,16 @@ export default function SetsPage() {
             <select
               id="barWeight"
               name="barWeight"
-              onChange={(e) => setBarWeight(+e.currentTarget.value)}
+              onChange={handleBarWeightChange}
               defaultValue="45"
             >
-              <option value="15">15</option>
-              <option value="35">35</option>
-              <option value="45">45</option>
+              {BAR_WEIGHT_OPTIONS.map((weightOption) => {
+                return (
+                  <option key={weightOption} value={weightOption}>
+                    {weightOption}
+                  </option>
+                )
+              })}
             </select>
           </div>
           <div>
@@ -70,6 +86,7 @@ export default function SetsPage() {
               min={barWeight.toString()}
               max={MAX_ALLOWED_WEIGHT}
               defaultValue={barWeight.toString()}
+              value={startWeight}
               step="2.5"
               type="number"
             />
@@ -83,6 +100,7 @@ export default function SetsPage() {
               min={barWeight.toString()}
               max="1000"
               defaultValue={barWeight.toString()}
+              value={workWeight}
               step="2.5"
               type="number"
             />
