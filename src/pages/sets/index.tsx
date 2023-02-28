@@ -1,24 +1,33 @@
 import Head from 'next/head'
 import { Set } from '@/components/Set'
 import { useEffect, useState } from 'react'
-import { getSets } from '@/lib/utils'
+import { getPlatesForWeight, getSets } from '@/lib/utils'
 import { BAR_WEIGHT_OPTIONS, MAX_ALLOWED_WEIGHT } from '@/common/consts'
 
+// TODO - handle errors in Plates component
+// TODO - style error text
+// TODO - make sure workWeight is achievable with plates
+
 export default function SetsPage() {
-  const [barWeight, setBarWeight] = useState<number>(45)
-  const [startWeight, setStartWeight] = useState<number>(45)
-  const [workWeight, setWorkWeight] = useState<number>(45)
+  const defaultBarWeight = BAR_WEIGHT_OPTIONS[BAR_WEIGHT_OPTIONS.length - 1]
+
+  const [barWeight, setBarWeight] = useState<number>(defaultBarWeight)
+
+  const [startWeight, setStartWeight] = useState<number>(defaultBarWeight)
+  const [startWeightError, setStartWeightError] = useState('')
+
+  const [workWeight, setWorkWeight] = useState<number>(defaultBarWeight)
+  const [workWeightError, setWorkWeightError] = useState('')
+
   const [sets, setSets] = useState<number[]>([])
 
   useEffect(() => {
-    console.log(
-      `in useEffect, startWeight: ${startWeight}, workWeight: ${workWeight} `
-    )
     try {
       let sets = getSets({ startWeight: startWeight, workWeight: workWeight })
       setSets(sets)
     } catch (err) {
       console.log(err)
+      setSets([])
     }
   }, [barWeight, startWeight, workWeight])
 
@@ -26,28 +35,70 @@ export default function SetsPage() {
     const newBarWeight = Number(e.currentTarget.value)
     setBarWeight(newBarWeight)
 
-    // if the other fields need
-    //
-    // TODO - would be nice to throw an error here? maybe add form validation?
+    // if the other fields need to be adjusted, adjust them
+    if (startWeight < barWeight) setStartWeight(barWeight)
+    if (workWeight < barWeight) setWorkWeight(barWeight)
   }
 
   function handleStartWeightChange(e: React.ChangeEvent<HTMLInputElement>) {
-    // can't trust the input to handle the max value
-    // if it's manually changed, so make sure we don't exceed it here
+    // clear the error
+    setStartWeightError('')
+
     const newStartWeight = Number(e.currentTarget.value)
 
-    if (newStartWeight <= MAX_ALLOWED_WEIGHT && newStartWeight >= barWeight) {
-      setStartWeight(newStartWeight)
+    if (isNaN(newStartWeight)) {
+      setStartWeightError(`Must be a number`)
+      return
     }
-    // TODO - would be nice to throw an error here? maybe add form validation?
+
+    if (newStartWeight > MAX_ALLOWED_WEIGHT) {
+      setStartWeightError(`Must be less than or equal to ${MAX_ALLOWED_WEIGHT}`)
+    }
+
+    if (newStartWeight < barWeight) {
+      setStartWeightError(
+        'Must be greater than or equal to the weight of the bar'
+      )
+    }
+
+    if (newStartWeight > workWeight) {
+      setStartWeightError(`Must be less than or equal to the work weight`)
+    }
+
+    setStartWeight(newStartWeight)
   }
 
   function handleWorkWeightChange(e: React.ChangeEvent<HTMLInputElement>) {
-    // can't trust the input to handle the max value
-    // if it's manually changed, so make sure we don't exceed it here
+    setWorkWeightError('')
     const newWorkWeight = Number(e.currentTarget.value)
-    if (newWorkWeight <= MAX_ALLOWED_WEIGHT) setWorkWeight(newWorkWeight)
-    // TODO - would be nice to throw an error here? maybe add form validation?
+
+    if (isNaN(newWorkWeight)) {
+      setWorkWeightError(`Must be a number`)
+      return
+    }
+
+    if (newWorkWeight > MAX_ALLOWED_WEIGHT) {
+      setWorkWeightError(`Must be less than or equal to ${MAX_ALLOWED_WEIGHT}`)
+    }
+
+    if (newWorkWeight < barWeight) {
+      setWorkWeightError(
+        'Must be greater than or equal to the weight of the bar'
+      )
+    }
+
+    // make sure we can generate plates for the final set
+
+    if (
+      getPlatesForWeight({ targetWeight: newWorkWeight, barWeight }).length ===
+      0
+    ) {
+      setWorkWeightError(
+        "Can't make this work weight with the available plates"
+      )
+    }
+
+    setWorkWeight(newWorkWeight)
   }
 
   return (
@@ -83,13 +134,11 @@ export default function SetsPage() {
               id="startWeight"
               name="startWeight"
               onChange={handleStartWeightChange}
-              min={barWeight.toString()}
-              max={MAX_ALLOWED_WEIGHT}
               defaultValue={barWeight.toString()}
               value={startWeight}
-              step="2.5"
-              type="number"
+              type="text"
             />
+            {startWeightError ? <div>{startWeightError} </div> : null}
           </div>
           <div>
             <label htmlFor="workWeight"> Work Weight</label>{' '}
@@ -97,16 +146,14 @@ export default function SetsPage() {
               id="workWeight"
               name="workWeight"
               onChange={handleWorkWeightChange}
-              min={barWeight.toString()}
-              max="1000"
               defaultValue={barWeight.toString()}
               value={workWeight}
-              step="2.5"
-              type="number"
+              type="text"
             />
           </div>
+          {workWeightError ? <div>{workWeightError} </div> : null}
           <div>
-            {sets.length
+            {!workWeightError && !startWeightError && sets.length
               ? sets.map((setWeight) => (
                   <Set
                     key={setWeight}
