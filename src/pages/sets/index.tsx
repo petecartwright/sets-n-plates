@@ -6,7 +6,6 @@ import { BAR_WEIGHT_OPTIONS, MAX_ALLOWED_WEIGHT } from '@/common/consts'
 
 // TODO - handle errors in Plates component
 // TODO - style error text
-// TODO - make sure workWeight is achievable with plates
 
 export default function SetsPage() {
   const defaultBarWeight = BAR_WEIGHT_OPTIONS[BAR_WEIGHT_OPTIONS.length - 1]
@@ -26,7 +25,6 @@ export default function SetsPage() {
       let sets = getSets({ startWeight: startWeight, workWeight: workWeight })
       setSets(sets)
     } catch (err) {
-      console.log(err)
       setSets([])
     }
   }, [barWeight, startWeight, workWeight])
@@ -36,8 +34,8 @@ export default function SetsPage() {
     setBarWeight(newBarWeight)
 
     // if the other fields need to be adjusted, adjust them
-    if (startWeight < barWeight) setStartWeight(barWeight)
-    if (workWeight < barWeight) setWorkWeight(barWeight)
+    if (startWeight < newBarWeight) setStartWeight(newBarWeight)
+    if (workWeight < newBarWeight) setWorkWeight(newBarWeight)
   }
 
   function handleStartWeightChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -88,11 +86,14 @@ export default function SetsPage() {
     }
 
     // make sure we can generate plates for the final set
+    try {
+      const plates = getPlatesForWeight({
+        targetWeight: newWorkWeight,
+        barWeight,
+      })
 
-    if (
-      getPlatesForWeight({ targetWeight: newWorkWeight, barWeight }).length ===
-      0
-    ) {
+      if (plates.length === 0) throw new Error()
+    } catch {
       setWorkWeightError(
         "Can't make this work weight with the available plates"
       )
@@ -134,7 +135,6 @@ export default function SetsPage() {
               id="startWeight"
               name="startWeight"
               onChange={handleStartWeightChange}
-              defaultValue={barWeight.toString()}
               value={startWeight}
               type="text"
             />
@@ -146,7 +146,6 @@ export default function SetsPage() {
               id="workWeight"
               name="workWeight"
               onChange={handleWorkWeightChange}
-              defaultValue={barWeight.toString()}
               value={workWeight}
               type="text"
             />
