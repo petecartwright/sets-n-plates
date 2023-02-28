@@ -18,13 +18,16 @@ export function Set(props: ISetProps) {
   const [plates, setPlates] = useState<number[]>([])
 
   useEffect(() => {
-    const plates = getPlatesForWeight({
-      targetWeight: newWeight,
-      barWeight,
-      availablePlates,
-    })
-
-    setPlates(plates)
+    try {
+      const plates = getPlatesForWeight({
+        targetWeight: newWeight,
+        barWeight,
+        availablePlates,
+      })
+      setPlates(plates)
+    } catch (err) {
+      console.log('error is ', err)
+    }
   }, [newWeight, barWeight, availablePlates])
 
   function bumpWeight(bump: 'up' | 'down') {
