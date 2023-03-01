@@ -68,7 +68,16 @@ export default function SetsPage() {
 
   function handleWorkWeightChange(e: React.ChangeEvent<HTMLInputElement>) {
     setWorkWeightError('')
-    const newWorkWeight = Number(e.currentTarget.value)
+
+    const inputValue = e.currentTarget.value
+
+    // if the last entered character is a decimal, just set the value
+    // but don't do any valiation
+    if (inputValue.slice(-1) === '.') {
+      setWorkWeight(inputValue)
+      return
+    }
+    const newWorkWeight = Number(inputValue)
 
     if (isNaN(newWorkWeight)) {
       setWorkWeightError(`Must be a number`)
