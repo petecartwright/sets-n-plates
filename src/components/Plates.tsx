@@ -1,5 +1,3 @@
-import styles from './Plates.module.css'
-
 interface IPlatesProps {
   plates: number[]
 }
@@ -10,7 +8,7 @@ export function Plates(props: IPlatesProps) {
   let formattedPlates = plates.join(' | ')
 
   return (
-    <div className={styles.plates}>
+    <div>
       {formattedPlates ? (
         <span>{formattedPlates}</span>
       ) : (
