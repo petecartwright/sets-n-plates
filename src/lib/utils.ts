@@ -65,7 +65,10 @@ export function getPlatesForWeight({
   // Make sure the oneSideWeight is acheivable with our weights
   // if we can modulo it for the smallest weight, we can do it for sure
   const smallestWeight = availablePlates[availablePlates.length - 1]
-  if (oneSideWeight % smallestWeight !== 0) return []
+  invariant(
+    oneSideWeight % smallestWeight === 0,
+    'unable to generate plates for this combination'
+  )
 
   const plates: number[] = []
   while (oneSideWeight > 0) {
@@ -77,6 +80,7 @@ export function getPlatesForWeight({
     plates.push(heaviestPlate)
     oneSideWeight = oneSideWeight - heaviestPlate
   }
+
   return plates
 }
 

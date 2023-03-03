@@ -1,54 +1,152 @@
 import Head from 'next/head'
 import { Set } from '@/components/Set'
 import { useEffect, useState } from 'react'
-import { getSets } from '@/lib/utils'
+import { getPlatesForWeight, getSets } from '@/lib/utils'
 import { BAR_WEIGHT_OPTIONS, MAX_ALLOWED_WEIGHT } from '@/common/consts'
 
+// TODO - handle errors in Plates component
+// TODO - style error text
+
+interface ISetFormState {
+  barWeight: string
+  startWeight: string
+  workWeight: string
+}
+
+interface IValidationResults {
+  [key: string]: { isValid: boolean; message: string }[]
+}
+
+// Validation pattern borrowed from Robin Wieruch's blog post:
+// https://www.robinwieruch.de/react-form/#react-form-with-validation
+const VALIDATION: Record<string, any> = {
+  startWeight: [
+    {
+      isValid: (formState: ISetFormState, value: string) =>
+        !isNaN(Number(value)),
+      message: 'Start weight must be a number',
+    },
+    {
+      isValid: (formState: ISetFormState, value: string) =>
+        Number(value) >= Number(formState.barWeight),
+      message: 'Start weight must be greater than or equal to bar weight',
+    },
+    {
+      isValid: (formState: ISetFormState, value: string) =>
+        Number(value) <= Number(formState.workWeight),
+      message: 'Start weight must be less than or equal to work weight',
+    },
+    {
+      isValid: (formState: ISetFormState, value: string) =>
+        Number(value) <= MAX_ALLOWED_WEIGHT,
+      message: `Start weight must be less than or equal to ${MAX_ALLOWED_WEIGHT}`,
+    },
+  ],
+  workWeight: [
+    {
+      isValid: (formState: ISetFormState, value: string) =>
+        !isNaN(Number(value)),
+      message: 'Work weight must be a number',
+    },
+    {
+      isValid: (formState: ISetFormState, value: string) =>
+        Number(value) >= Number(formState.barWeight),
+      message: 'Work weight must be greater than or equal to bar weight',
+    },
+    {
+      isValid: (formState: ISetFormState, value: string) =>
+        Number(value) >= Number(formState.startWeight),
+      message: 'Work weight must be greater than or equal to start weight',
+    },
+    {
+      isValid: (formState: ISetFormState, value: string) =>
+        Number(value) <= MAX_ALLOWED_WEIGHT,
+      message: `Work weight must be less than or equal to ${MAX_ALLOWED_WEIGHT}`,
+    },
+    {
+      isValid: (formState: ISetFormState, value: string) => {
+        // see if we can make plates with this value
+        try {
+          let targetWeight = Number(value)
+          let barWeight = Number(formState.barWeight)
+          getPlatesForWeight({ targetWeight, barWeight })
+          return true
+        } catch (err) {
+          return false
+        }
+      },
+      message: 'Unable to get plates for this weight',
+    },
+  ],
+}
+
+function getErrorFields(
+  formState: ISetFormState
+): [IValidationResults, number] {
+  // look at each field, run all defined validation checks
+  // return list of errors if any
+  const errors: IValidationResults = Object.keys(formState).reduce(
+    (acc, key) => {
+      // if we don't have validation defined, we're done
+      if (!VALIDATION[key]) return acc
+
+      // perform each check for each field and get a list of potential errors
+      const errorsPerField = VALIDATION[key]
+        .map(
+          (validation) => ({
+            isValid: validation.isValid(formState, formState[key]),
+            message: validation.message,
+          }),
+          {}
+        )
+        // remove anything without an error
+        .filter((fieldError) => !fieldError.isValid)
+
+      return { ...acc, [key]: errorsPerField }
+    },
+    {}
+  )
+
+  const errorCount = Object.keys(errors).reduce((count, item) => {
+    return count + errors[item].length
+  }, 0)
+
+  return [errors, errorCount]
+}
+
 export default function SetsPage() {
-  const [barWeight, setBarWeight] = useState<number>(45)
-  const [startWeight, setStartWeight] = useState<number>(45)
-  const [workWeight, setWorkWeight] = useState<number>(45)
+  const defaultBarWeight = BAR_WEIGHT_OPTIONS[BAR_WEIGHT_OPTIONS.length - 1]
+
   const [sets, setSets] = useState<number[]>([])
+  const [formState, setFormState] = useState({
+    barWeight: defaultBarWeight.toString(),
+    startWeight: defaultBarWeight.toString(),
+    workWeight: '',
+  })
+
+  const [errorFields, errorCount] = getErrorFields(formState)
+
+  function handleChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) {
+    setFormState({
+      ...formState,
+      [event.target.id]: event.target.value,
+    })
+  }
 
   useEffect(() => {
-    console.log(
-      `in useEffect, startWeight: ${startWeight}, workWeight: ${workWeight} `
-    )
-    try {
-      let sets = getSets({ startWeight: startWeight, workWeight: workWeight })
-      setSets(sets)
-    } catch (err) {
-      console.log(err)
+    let start = Number(formState.startWeight)
+    let work = Number(formState.workWeight)
+    if (start && work) {
+      try {
+        let sets = getSets({ startWeight: start, workWeight: work })
+        setSets(sets)
+      } catch (err) {
+        setSets([])
+      }
     }
-  }, [barWeight, startWeight, workWeight])
-
-  function handleBarWeightChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    const newBarWeight = Number(e.currentTarget.value)
-    setBarWeight(newBarWeight)
-
-    // if the other fields need
-    //
-    // TODO - would be nice to throw an error here? maybe add form validation?
-  }
-
-  function handleStartWeightChange(e: React.ChangeEvent<HTMLInputElement>) {
-    // can't trust the input to handle the max value
-    // if it's manually changed, so make sure we don't exceed it here
-    const newStartWeight = Number(e.currentTarget.value)
-
-    if (newStartWeight <= MAX_ALLOWED_WEIGHT && newStartWeight >= barWeight) {
-      setStartWeight(newStartWeight)
-    }
-    // TODO - would be nice to throw an error here? maybe add form validation?
-  }
-
-  function handleWorkWeightChange(e: React.ChangeEvent<HTMLInputElement>) {
-    // can't trust the input to handle the max value
-    // if it's manually changed, so make sure we don't exceed it here
-    const newWorkWeight = Number(e.currentTarget.value)
-    if (newWorkWeight <= MAX_ALLOWED_WEIGHT) setWorkWeight(newWorkWeight)
-    // TODO - would be nice to throw an error here? maybe add form validation?
-  }
+  }, [formState.barWeight, formState.startWeight, formState.workWeight])
 
   return (
     <>
@@ -65,7 +163,7 @@ export default function SetsPage() {
             <select
               id="barWeight"
               name="barWeight"
-              onChange={handleBarWeightChange}
+              onChange={handleChange}
               defaultValue="45"
             >
               {BAR_WEIGHT_OPTIONS.map((weightOption) => {
@@ -82,36 +180,38 @@ export default function SetsPage() {
             <input
               id="startWeight"
               name="startWeight"
-              onChange={handleStartWeightChange}
-              min={barWeight.toString()}
-              max={MAX_ALLOWED_WEIGHT}
-              defaultValue={barWeight.toString()}
-              value={startWeight}
-              step="2.5"
-              type="number"
+              onChange={handleChange}
+              value={formState.startWeight}
+              type="text"
             />
+            {errorFields.startWeight?.length ? (
+              <span style={{ color: 'red' }}>
+                {errorFields.startWeight[0].message}{' '}
+              </span>
+            ) : null}
           </div>
           <div>
             <label htmlFor="workWeight"> Work Weight</label>{' '}
             <input
               id="workWeight"
               name="workWeight"
-              onChange={handleWorkWeightChange}
-              min={barWeight.toString()}
-              max="1000"
-              defaultValue={barWeight.toString()}
-              value={workWeight}
-              step="2.5"
-              type="number"
+              onChange={handleChange}
+              value={formState.workWeight}
+              type="text"
             />
+            {errorFields.workWeight?.length ? (
+              <span style={{ color: 'red' }}>
+                {errorFields.workWeight[0].message}{' '}
+              </span>
+            ) : null}
           </div>
           <div>
-            {sets.length
+            {errorCount === 0 && sets.length
               ? sets.map((setWeight) => (
                   <Set
                     key={setWeight}
                     targetWeight={setWeight}
-                    barWeight={barWeight}
+                    barWeight={Number(formState.barWeight)}
                   />
                 ))
               : null}
