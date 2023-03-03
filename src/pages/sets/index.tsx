@@ -17,6 +17,15 @@ interface IValidationResults {
   [key: string]: { isValid: boolean; message: string }[]
 }
 
+const DEFAULT_BAR_WEIGHT =
+  BAR_WEIGHT_OPTIONS[BAR_WEIGHT_OPTIONS.length - 1].toString()
+
+const INITIAL_VALUES: ISetFormState = {
+  barWeight: DEFAULT_BAR_WEIGHT,
+  startWeight: DEFAULT_BAR_WEIGHT,
+  workWeight: '',
+}
+
 // Validation pattern borrowed from Robin Wieruch's blog post:
 // https://www.robinwieruch.de/react-form/#react-form-with-validation
 const VALIDATION: Record<string, any> = {
@@ -114,18 +123,29 @@ function getErrorFields(
   return [errors, errorCount]
 }
 
-export default function SetsPage() {
-  const defaultBarWeight = BAR_WEIGHT_OPTIONS[BAR_WEIGHT_OPTIONS.length - 1]
+function isDirty(formState) {
+  // return true if any of the fields have changed from initial values
+  // false otherwise
+  // does not tell you which ones bc I don't care
+  const dirtyFields = Object.keys(formState)
+    .map((key) => {
+      // see what form fields don't have the initial values
+      const isDirty = formState[key] !== INITIAL_VALUES[key]
+      return isDirty
+    })
+    .filter((item) => item)
+  console.log(dirtyFields)
+  return dirtyFields.length > 0
+}
 
+export default function SetsPage() {
   const [sets, setSets] = useState<number[]>([])
-  const [formState, setFormState] = useState({
-    barWeight: defaultBarWeight.toString(),
-    startWeight: defaultBarWeight.toString(),
-    workWeight: '',
-  })
+  const [formState, setFormState] = useState(INITIAL_VALUES)
 
   const [errorFields, errorCount] = getErrorFields(formState)
 
+  const dirty = isDirty(formState)
+  console.log('dirty', dirty)
   function handleChange(
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) {
@@ -184,10 +204,8 @@ export default function SetsPage() {
               value={formState.startWeight}
               type="text"
             />
-            {errorFields.startWeight?.length ? (
-              <span style={{ color: 'red' }}>
-                {errorFields.startWeight[0].message}{' '}
-              </span>
+            {dirty && errorFields.startWeight?.length ? (
+              <span>{errorFields.startWeight[0].message} </span>
             ) : null}
           </div>
           <div>
@@ -199,10 +217,8 @@ export default function SetsPage() {
               value={formState.workWeight}
               type="text"
             />
-            {errorFields.workWeight?.length ? (
-              <span style={{ color: 'red' }}>
-                {errorFields.workWeight[0].message}{' '}
-              </span>
+            {dirty && errorFields.workWeight?.length ? (
+              <span>{errorFields.workWeight[0].message} </span>
             ) : null}
           </div>
           <div>
