@@ -140,9 +140,8 @@ export default function SetsPage() {
   const [formState, setFormState] = useState(INITIAL_VALUES)
 
   const [errorFields, errorCount] = getErrorFields(formState)
-
   const dirty = isDirty(formState)
-  console.log('dirty', dirty)
+
   function handleChange(
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) {
@@ -173,28 +172,56 @@ export default function SetsPage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div>
-          SETS
-          <div>
-            <label htmlFor="barWeight">Bar</label>{' '}
-            <select
-              id="barWeight"
-              name="barWeight"
-              onChange={handleChange}
-              defaultValue="45"
-            >
-              {BAR_WEIGHT_OPTIONS.map((weightOption) => {
-                return (
-                  <option key={weightOption} value={weightOption}>
-                    {weightOption}
-                  </option>
-                )
-              })}
-            </select>
+        <div className="w-full">
+          <div className="flex justify-center py-10">
+            <span className="text-5xl text-gray-700 font-bold">
+              SETS&apos;N&apos;PLATES
+            </span>
           </div>
-          <div>
-            <label htmlFor="startWeight"> Start Weight</label>{' '}
+          <div className="w-full md:w-1/6 px-5 mb-6">
+            <label
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+              htmlFor="barWeight"
+            >
+              Bar
+            </label>
+            <div className="relative">
+              <select
+                className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded focus:outline-none focus:bg-white focus:border-gray-500"
+                id="barWeight"
+                name="barWeight"
+                onChange={handleChange}
+                defaultValue="45"
+              >
+                {BAR_WEIGHT_OPTIONS.map((weightOption) => {
+                  return (
+                    <option key={weightOption} value={weightOption}>
+                      {weightOption}
+                    </option>
+                  )
+                })}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full md:w-1/3 px-5 mb-6 ">
+            <label
+              className="block uppercase tracking-wide font-bold text-xs text-gray-700 mb-2"
+              htmlFor="startWeight"
+            >
+              Start Weight
+            </label>
             <input
+              className="appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="startWeight"
               name="startWeight"
               onChange={handleChange}
@@ -202,12 +229,21 @@ export default function SetsPage() {
               type="text"
             />
             {dirty && errorFields.startWeight?.length ? (
-              <span>{errorFields.startWeight[0].message} </span>
+              <p className="text-red-500 text-xs italic">
+                {errorFields.startWeight[0].message}{' '}
+              </p>
             ) : null}
           </div>
-          <div>
-            <label htmlFor="workWeight"> Work Weight</label>{' '}
+
+          <div className="w-full md:w-1/3 px-5 mb-6 ">
+            <label
+              className="block uppercase tracking-wide font-bold text-xs text-gray-700 mb-2"
+              htmlFor="workWeight"
+            >
+              Work Weight
+            </label>
             <input
+              className="appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="workWeight"
               name="workWeight"
               onChange={handleChange}
@@ -215,20 +251,22 @@ export default function SetsPage() {
               type="text"
             />
             {dirty && errorFields.workWeight?.length ? (
-              <span>{errorFields.workWeight[0].message} </span>
+              <p className="text-red-500 text-xs italic">
+                {errorFields.workWeight[0].message}{' '}
+              </p>
             ) : null}
           </div>
-          <div>
-            {errorCount === 0 && sets.length
-              ? sets.map((setWeight) => (
-                  <Set
-                    key={setWeight}
-                    targetWeight={setWeight}
-                    barWeight={Number(formState.barWeight)}
-                  />
-                ))
-              : null}
-          </div>
+        </div>
+        <div className="px-5">
+          {errorCount === 0 && sets.length
+            ? sets.map((setWeight) => (
+                <Set
+                  key={setWeight}
+                  targetWeight={setWeight}
+                  barWeight={Number(formState.barWeight)}
+                />
+              ))
+            : null}
         </div>
       </main>
     </>
