@@ -26,7 +26,7 @@ export function Set(props: ISetProps) {
       })
       setPlates(plates)
     } catch (err) {
-      console.log('error is ', err)
+      setPlates([])
     }
   }, [newWeight, barWeight, availablePlates])
 
