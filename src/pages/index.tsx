@@ -178,7 +178,7 @@ export default function SetsPage() {
               SETS&apos;N&apos;PLATES
             </span>
           </div>
-          <div className="w-1/3 pl-5 mb-6">
+          <div className="barContainer w-full md:w-1/3 px-5 mb-6">
             <label
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="barWeight"
@@ -212,16 +212,16 @@ export default function SetsPage() {
               </div>
             </div>
           </div>
-          <div className="weightInputsContainer flex w-1/3">
+          <div className="weightInputsContainer flex md:w-1/3">
             <div className="startWeightContainer px-5 mb-6 ">
               <label
-                className="block uppercase tracking-wide font-bold text-xs text-gray-700 mb-2 whitespace-nowrap"
+                className="block uppercase tracking-wide font-bold text-xs text-gray-700 mb-2"
                 htmlFor="startWeight"
               >
                 Start Weight
               </label>
               <input
-                className="appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="startWeight"
                 name="startWeight"
                 onChange={handleChange}
@@ -235,15 +235,15 @@ export default function SetsPage() {
               ) : null}
             </div>
 
-            <div className="workWeightContainer px-5 mb-6 mx-auto">
+            <div className="workWeightContainer px-5 mb-6">
               <label
-                className="block uppercase tracking-wide font-bold text-xs text-gray-700 mb-2 whitespace-nowrap"
+                className="block uppercase tracking-wide font-bold text-xs text-gray-700 mb-2"
                 htmlFor="workWeight"
               >
                 Work Weight
               </label>
               <input
-                className="appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                className="appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full"
                 id="workWeight"
                 name="workWeight"
                 onChange={handleChange}
@@ -258,7 +258,7 @@ export default function SetsPage() {
             </div>
           </div>
         </div>
-        <div className="px-5">
+        <div className="setsContainer px-5">
           {errorCount === 0 && sets.length
             ? sets.map((setWeight) => (
                 <Set
