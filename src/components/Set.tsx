@@ -57,7 +57,6 @@ export function Set(props: ISetProps) {
           +
         </button>
       </div>
-      {/* <div className={styles['platesContainer']}> */}
       <div className="flex pl-10 items-center">
         <Plates plates={plates} />
       </div>
