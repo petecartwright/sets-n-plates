@@ -172,13 +172,13 @@ export default function SetsPage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="backgroundPattern h-screen">
-        <div className="w-full">
+        <div className="w-full md:w-1/3 mx-auto">
           <div className="flex justify-center py-10">
             <span className="text-5xl text-gray-700 font-bold">
               SETS&apos;N&apos;PLATES
             </span>
           </div>
-          <div className="barContainer w-full md:w-1/3 px-5 mb-6">
+          <div className="barContainer w-full px-5 mb-6">
             <label
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="barWeight"
@@ -212,7 +212,7 @@ export default function SetsPage() {
               </div>
             </div>
           </div>
-          <div className="weightInputsContainer flex md:w-1/3">
+          <div className="weightInputsContainer flex ">
             <div className="startWeightContainer px-5 mb-6 ">
               <label
                 className="block uppercase tracking-wide font-bold text-xs text-gray-700 mb-2"
@@ -257,17 +257,17 @@ export default function SetsPage() {
               ) : null}
             </div>
           </div>
-        </div>
-        <div className="setsContainer px-5">
-          {errorCount === 0 && sets.length
-            ? sets.map((setWeight) => (
-                <Set
-                  key={setWeight}
-                  targetWeight={setWeight}
-                  barWeight={Number(formState.barWeight)}
-                />
-              ))
-            : null}
+          <div className="setsContainer px-5">
+            {errorCount === 0 && sets.length
+              ? sets.map((setWeight) => (
+                  <Set
+                    key={setWeight}
+                    targetWeight={setWeight}
+                    barWeight={Number(formState.barWeight)}
+                  />
+                ))
+              : null}
+          </div>
         </div>
       </main>
     </>
