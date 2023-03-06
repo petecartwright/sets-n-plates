@@ -42,7 +42,7 @@ export function Set(props: ISetProps) {
     <div className="flex py-3">
       <div className="flex justify-between items-center w-4/12">
         <button
-          className="bg-transparent hover:bg-gray-500 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent rounded"
+          className="bg-transparent hover:bg-gray-500 text-gray-700 font-semibold hover:text-white py-1 px-3 border border-gray-500 hover:border-transparent rounded"
           type="button"
           onClick={() => bumpWeight('down')}
         >
@@ -50,14 +50,14 @@ export function Set(props: ISetProps) {
         </button>
         <div>{newWeight}</div>
         <button
-          className="bg-transparent hover:bg-gray-500 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent rounded"
+          className="bg-transparent hover:bg-gray-500 text-gray-700 font-semibold hover:text-white py-1 px-3 border border-gray-500 hover:border-transparent rounded"
           type="button"
           onClick={() => bumpWeight('up')}
         >
           +
         </button>
       </div>
-      {/* <div className={styles['platesContainer']}> */}
+
       <div className="flex pl-10 items-center">
         <Plates plates={plates} />
       </div>

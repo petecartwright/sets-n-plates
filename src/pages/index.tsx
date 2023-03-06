@@ -39,8 +39,8 @@ const VALIDATION: Record<string, any> = {
     },
     {
       isValid: (formState: ISetFormState, value: string) =>
-        Number(value) <= Number(formState.workWeight),
-      message: 'Start weight must be less than or equal to work weight',
+        Number(value) < Number(formState.workWeight),
+      message: 'Start weight must be less than work weight',
     },
     {
       isValid: (formState: ISetFormState, value: string) =>
@@ -61,8 +61,8 @@ const VALIDATION: Record<string, any> = {
     },
     {
       isValid: (formState: ISetFormState, value: string) =>
-        Number(value) >= Number(formState.startWeight),
-      message: 'Work weight must be greater than or equal to start weight',
+        Number(value) > Number(formState.startWeight),
+      message: 'Work weight must be greater than start weight',
     },
     {
       isValid: (formState: ISetFormState, value: string) =>
@@ -171,14 +171,14 @@ export default function SetsPage() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <div className="w-full">
+      <main className="backgroundPattern h-screen">
+        <div className="w-full md:w-1/3 mx-auto">
           <div className="flex justify-center py-10">
             <span className="text-5xl text-gray-700 font-bold">
               SETS&apos;N&apos;PLATES
             </span>
           </div>
-          <div className="w-full md:w-1/6 px-5 mb-6">
+          <div className="barContainer w-full px-5 mb-6">
             <label
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="barWeight"
@@ -212,61 +212,62 @@ export default function SetsPage() {
               </div>
             </div>
           </div>
+          <div className="weightInputsContainer flex ">
+            <div className="startWeightContainer px-5 mb-6 ">
+              <label
+                className="block uppercase tracking-wide font-bold text-xs text-gray-700 mb-2"
+                htmlFor="startWeight"
+              >
+                Start Weight
+              </label>
+              <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                id="startWeight"
+                name="startWeight"
+                onChange={handleChange}
+                value={formState.startWeight}
+                type="text"
+              />
+              {dirty && errorFields.startWeight?.length ? (
+                <p className="text-red-500 text-xs italic">
+                  {errorFields.startWeight[0].message}{' '}
+                </p>
+              ) : null}
+            </div>
 
-          <div className="w-full md:w-1/3 px-5 mb-6 ">
-            <label
-              className="block uppercase tracking-wide font-bold text-xs text-gray-700 mb-2"
-              htmlFor="startWeight"
-            >
-              Start Weight
-            </label>
-            <input
-              className="appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="startWeight"
-              name="startWeight"
-              onChange={handleChange}
-              value={formState.startWeight}
-              type="text"
-            />
-            {dirty && errorFields.startWeight?.length ? (
-              <p className="text-red-500 text-xs italic">
-                {errorFields.startWeight[0].message}{' '}
-              </p>
-            ) : null}
+            <div className="workWeightContainer px-5 mb-6">
+              <label
+                className="block uppercase tracking-wide font-bold text-xs text-gray-700 mb-2"
+                htmlFor="workWeight"
+              >
+                Work Weight
+              </label>
+              <input
+                className="appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full"
+                id="workWeight"
+                name="workWeight"
+                onChange={handleChange}
+                value={formState.workWeight}
+                type="text"
+              />
+              {dirty && errorFields.workWeight?.length ? (
+                <p className="text-red-500 text-xs italic">
+                  {errorFields.workWeight[0].message}{' '}
+                </p>
+              ) : null}
+            </div>
           </div>
-
-          <div className="w-full md:w-1/3 px-5 mb-6 ">
-            <label
-              className="block uppercase tracking-wide font-bold text-xs text-gray-700 mb-2"
-              htmlFor="workWeight"
-            >
-              Work Weight
-            </label>
-            <input
-              className="appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="workWeight"
-              name="workWeight"
-              onChange={handleChange}
-              value={formState.workWeight}
-              type="text"
-            />
-            {dirty && errorFields.workWeight?.length ? (
-              <p className="text-red-500 text-xs italic">
-                {errorFields.workWeight[0].message}{' '}
-              </p>
-            ) : null}
+          <div className="setsContainer px-5">
+            {errorCount === 0 && sets.length
+              ? sets.map((setWeight) => (
+                  <Set
+                    key={setWeight}
+                    targetWeight={setWeight}
+                    barWeight={Number(formState.barWeight)}
+                  />
+                ))
+              : null}
           </div>
-        </div>
-        <div className="px-5">
-          {errorCount === 0 && sets.length
-            ? sets.map((setWeight) => (
-                <Set
-                  key={setWeight}
-                  targetWeight={setWeight}
-                  barWeight={Number(formState.barWeight)}
-                />
-              ))
-            : null}
         </div>
       </main>
     </>
