@@ -2,7 +2,11 @@ import Head from 'next/head'
 import { Set } from '@/components/Set'
 import { useEffect, useState } from 'react'
 import { getPlatesForWeight, getSets } from '@/lib/utils'
-import { BAR_WEIGHT_OPTIONS, MAX_ALLOWED_WEIGHT } from '@/common/consts'
+import {
+  BAR_WEIGHT_OPTIONS,
+  DEFAULT_BAR_WEIGHT,
+  MAX_ALLOWED_WEIGHT,
+} from '@/common/consts'
 
 interface ISetFormState {
   barWeight: string
@@ -14,12 +18,9 @@ interface IValidationResults {
   [key: string]: { isValid: boolean; message: string }[]
 }
 
-const DEFAULT_BAR_WEIGHT =
-  BAR_WEIGHT_OPTIONS[BAR_WEIGHT_OPTIONS.length - 1].toString()
-
 const INITIAL_VALUES: ISetFormState = {
-  barWeight: DEFAULT_BAR_WEIGHT,
-  startWeight: DEFAULT_BAR_WEIGHT,
+  barWeight: DEFAULT_BAR_WEIGHT.toString(),
+  startWeight: DEFAULT_BAR_WEIGHT.toString(),
   workWeight: '',
 }
 
