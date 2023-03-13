@@ -132,7 +132,6 @@ function isDirty(formState) {
       return isDirty
     })
     .filter((item) => item)
-  console.log(dirtyFields)
   return dirtyFields.length > 0
 }
 
