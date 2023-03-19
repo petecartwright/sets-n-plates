@@ -27,7 +27,7 @@ describe('Sets page', () => {
 
     // assert
     cy.contains(
-      'Start weight must be greater than or equal to bar weight'
+      'Start weighasdfasdft must be greater than or equal to bar weight'
     ).should('exist')
     cy.contains(
       'Work weight must be greater than or equal to bar weight'
