@@ -269,6 +269,19 @@ export default function SetsPage() {
               : null}
           </div>
         </div>
+
+        <div className="sticky top-[90vh] flex">
+          <span className="mx-auto text-xs">
+            Feedback? Suggestions?{' '}
+            <a
+              // since tailwind resets the CSS for links, let's set this back to the default behavior
+              className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+              href="mailto:pete@petecartwright.com?subject=sets'n'plates feedback"
+            >
+              Send me an email!
+            </a>
+          </span>
+        </div>
       </main>
     </>
   )
