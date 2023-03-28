@@ -270,7 +270,7 @@ export default function SetsPage() {
           </div>
         </div>
 
-        <div className="sticky top-[90vh] flex">
+        <div className="fixed top-[90vh] flex">
           <span className="mx-auto text-xs">
             Feedback? Suggestions?{' '}
             <a
