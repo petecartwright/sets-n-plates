@@ -17,11 +17,6 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "plugins": [
-      {
-        "name": "typescript-plugin-css-modules"
-      }
-    ],
     "strict": false,
     "types": ["cypress", "@testing-library/cypress"]
   },
