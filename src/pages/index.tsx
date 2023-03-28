@@ -270,15 +270,8 @@ export default function SetsPage() {
           </div>
         </div>
 
-        <div
-          className="
-          fixed 
-          bottom-5 
-          left-[50%]
-          -translate-x-2/4
-          border border-amber-900"
-        >
-          <div className="text-xs flex-column text-center">
+        <div className="fixed bottom-5 left-[50%] -translate-x-2/4">
+          <div className="text-xs flex-column text-center block tracking-wide text-gray-700 font-bold ">
             <span>Feedback? Suggestions?</span>
             <br />
             <a
