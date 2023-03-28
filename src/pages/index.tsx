@@ -270,9 +270,17 @@ export default function SetsPage() {
           </div>
         </div>
 
-        <div className="fixed top-[90vh] flex">
-          <span className="mx-auto text-xs">
-            Feedback? Suggestions?{' '}
+        <div
+          className="
+          fixed 
+          bottom-5 
+          left-[50%]
+          -translate-x-2/4
+          border border-amber-900"
+        >
+          <div className="text-xs flex-column text-center">
+            <span>Feedback? Suggestions?</span>
+            <br />
             <a
               // since tailwind resets the CSS for links, let's set this back to the default behavior
               className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
@@ -280,7 +288,7 @@ export default function SetsPage() {
             >
               Send me an email!
             </a>
-          </span>
+          </div>
         </div>
       </main>
     </>
