@@ -269,6 +269,20 @@ export default function SetsPage() {
               : null}
           </div>
         </div>
+
+        <div className="fixed bottom-5 left-[50%] -translate-x-2/4">
+          <div className="text-xs flex-column text-center block tracking-wide text-gray-700 font-bold ">
+            <span>Feedback? Suggestions?</span>
+            <br />
+            <a
+              // since tailwind resets the CSS for links, let's set this back to the default behavior
+              className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+              href="mailto:pete@petecartwright.com?subject=sets'n'plates feedback"
+            >
+              Send me an email!
+            </a>
+          </div>
+        </div>
       </main>
     </>
   )
