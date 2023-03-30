@@ -10,9 +10,9 @@ describe('Sets page', () => {
 
     // assert
     cy.contains('empty bar!').should('exist')
-    cy.contains('10 | 1.25').should('exist')
-    cy.contains('10 | 10 | 2.5').should('exist')
-    cy.contains('25 | 5 | 2.5 | 1.25').should('exist')
+    cy.contains('10 | 2.5').should('exist')
+    cy.contains('25').should('exist')
+    cy.contains('25 | 10 | 2.5').should('exist')
     cy.contains('45').should('exist')
   })
 

@@ -92,8 +92,14 @@ export function getSets({
 }: IGetSetsProps): number[] {
   // function to get the weights for a list of warmup sets and one work set
 
-  // also if we have available plates, sort from largest to smallers
+  // if we have available plates, sort from largest to smallers
   availablePlates = availablePlates.sort((a, b) => b - a)
+
+  // we don't want to deal with teensy weights for work sets, so remove the smallest if it's fractional
+
+  if (availablePlates[availablePlates.length - 1] === 1.25) {
+    availablePlates.pop()
+  }
 
   let smallestPlate = availablePlates[availablePlates.length - 1]
 
