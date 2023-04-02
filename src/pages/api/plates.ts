@@ -5,7 +5,6 @@ import { formatPlateQuery } from '@/lib/formatPlatesQuery'
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const barWeight = req.query['barWeight']
   const targetWeight = req.query['targetWeight']
-  const availablePlates = req.query['availablePlates']
 
   if (!targetWeight) {
     res.status(400).json({ error: 'targetWeight is a required parameter' })
@@ -17,7 +16,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     formattedQuery = formatPlateQuery({
       barWeight,
       targetWeight,
-      availablePlates,
     })
   } catch {
     res.status(400).json({ error: 'Unable to generate plates' })
@@ -27,7 +25,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const plates = getPlatesForWeight({
     targetWeight: formattedQuery.targetWeight,
     barWeight: formattedQuery.barWeight,
-    availablePlates: formattedQuery.availablePlates,
   })
 
   res.status(200).json(plates)

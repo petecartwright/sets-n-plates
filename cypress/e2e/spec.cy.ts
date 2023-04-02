@@ -47,6 +47,19 @@ describe('Sets page', () => {
     cy.contains('Start weight must be less than work weight').should('exist')
     cy.contains('Work weight must be greater than start weight').should('exist')
   })
+
+  it('Correctly shows weights for a non-integer value', () => {
+    // arrange
+    cy.visit('/ ')
+
+    // act
+    cy.findAllByLabelText('Bar').select('45')
+    cy.findAllByLabelText('Start Weight').clear().type('45')
+    cy.findAllByLabelText('Work Weight').clear().type('222.5')
+
+    // assert
+    cy.contains('45 | 25 | 10 | 5 | 2.5 | 1.25').should('exist')
+  })
 })
 
 export {}

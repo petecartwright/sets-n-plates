@@ -21,7 +21,6 @@ export function Set(props: ISetProps) {
       const plates = getPlatesForWeight({
         targetWeight: newWeight,
         barWeight,
-        availablePlates,
       })
       setPlates(plates)
     } catch (err) {
