@@ -7,26 +7,21 @@ import {
 
 interface IGetHeaviestPlate {
   targetWeight: number
-  availablePlates?: number[]
 }
 
 interface IGetPlatesForWeight {
   targetWeight: number
   barWeight?: number
-  availablePlates?: number[]
 }
 
 interface IGetSetsProps {
-  availablePlates?: number[]
   workWeight: number
   numSets?: number
   startWeight: number
 }
 
-function getHeaviestPlate({
-  targetWeight,
-  availablePlates = DEFAULT_AVAILABLE_PLATES,
-}: IGetHeaviestPlate): number {
+function getHeaviestPlate({ targetWeight }: IGetHeaviestPlate): number {
+  const availablePlates = [...DEFAULT_AVAILABLE_PLATES]
   for (let plate of availablePlates) {
     if (plate <= targetWeight) {
       return plate
@@ -42,8 +37,8 @@ function getHeaviestPlate({
 export function getPlatesForWeight({
   targetWeight,
   barWeight = DEFAULT_BAR_WEIGHT,
-  availablePlates = DEFAULT_AVAILABLE_PLATES,
 }: IGetPlatesForWeight): number[] {
+  const availablePlates = [...DEFAULT_AVAILABLE_PLATES]
   // make sure availableWeights is sorted descending so we can start with bigger weights
   availablePlates.sort((a, b) => b - a)
 
@@ -75,7 +70,6 @@ export function getPlatesForWeight({
     // find the heaviest plate that fits the current weight
     let heaviestPlate = getHeaviestPlate({
       targetWeight: oneSideWeight,
-      availablePlates,
     })
     plates.push(heaviestPlate)
     oneSideWeight = oneSideWeight - heaviestPlate
@@ -85,15 +79,16 @@ export function getPlatesForWeight({
 }
 
 export function getSets({
-  availablePlates = DEFAULT_AVAILABLE_PLATES,
   numSets = 5,
   startWeight,
   workWeight,
 }: IGetSetsProps): number[] {
   // function to get the weights for a list of warmup sets and one work set
 
+  let availablePlates = [...DEFAULT_AVAILABLE_PLATES]
   // if we have available plates, sort from largest to smallers
   availablePlates = availablePlates.sort((a, b) => b - a)
+  console.log('in sets, DEFAULT_AVAILABLE_PLATES is ', DEFAULT_AVAILABLE_PLATES)
 
   // we don't want to deal with teensy weights for work sets, so remove the smallest if it's fractional
 

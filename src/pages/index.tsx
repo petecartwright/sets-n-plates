@@ -76,6 +76,7 @@ const VALIDATION: Record<string, any> = {
         try {
           let targetWeight = Number(value)
           let barWeight = Number(formState.barWeight)
+
           getPlatesForWeight({ targetWeight, barWeight })
           return true
         } catch (err) {
