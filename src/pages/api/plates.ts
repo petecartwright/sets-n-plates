@@ -1,10 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getPlatesForWeight } from '@/lib/utils'
 import { formatPlateQuery } from '@/lib/formatPlatesQuery'
+import invariant from 'tiny-invariant'
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const barWeight = req.query['barWeight']
   const targetWeight = req.query['targetWeight']
+  const units = req.query['units']
+
+  invariant(typeof units === 'string', 'Must be a string')
 
   if (!targetWeight) {
     res.status(400).json({ error: 'targetWeight is a required parameter' })
@@ -24,6 +28,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const plates = getPlatesForWeight({
     targetWeight: formattedQuery.targetWeight,
+    units,
     barWeight: formattedQuery.barWeight,
   })
 

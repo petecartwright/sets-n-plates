@@ -15,7 +15,6 @@ export function formatPlateQuery(
   args: IFormatPlateQueryArgs
 ): IFormattedPlateQuery {
   const { barWeight, targetWeight } = args
-  const availablePlates = [...DEFAULT_AVAILABLE_PLATES]
   let targetWeightFormatted: number
   let barWeightFormatted: number | undefined
 
