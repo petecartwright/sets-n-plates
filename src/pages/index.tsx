@@ -130,9 +130,6 @@ export default function SetsPage() {
 
   const units = isKilos ? 'kilos' : 'pounds'
 
-  console.log('units', units)
-  console.log('isKilos', isKilos)
-
   const INITIAL_VALUES: ISetFormState = {
     barWeight: DEFAULT_BAR_WEIGHT[units].toString(),
     startWeight: DEFAULT_BAR_WEIGHT[units].toString(),
@@ -294,16 +291,25 @@ export default function SetsPage() {
                 mt-20
             "
           >
-            <Label htmlFor="units" onClick={() => setIsKilos(false)}>
+            <Label
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold"
+              htmlFor="units"
+              onClick={() => setIsKilos(false)}
+            >
               Pounds
             </Label>
             <Switch
+              className="scale-150"
               id="weight-units"
               name="units"
               checked={isKilos}
               onCheckedChange={setIsKilos}
             />
-            <Label htmlFor="units" onClick={() => setIsKilos(true)}>
+            <Label
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold"
+              htmlFor="units"
+              onClick={() => setIsKilos(true)}
+            >
               Kilos
             </Label>
           </div>
