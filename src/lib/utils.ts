@@ -4,24 +4,33 @@ import {
   DEFAULT_BAR_WEIGHT,
   MAX_ALLOWED_WEIGHT,
 } from 'src/common/consts'
+import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
 
 interface IGetHeaviestPlate {
   targetWeight: number
+  units: string
 }
 
 interface IGetPlatesForWeight {
   targetWeight: number
   barWeight?: number
+  units: string
 }
 
 interface IGetSetsProps {
   workWeight: number
   numSets?: number
   startWeight: number
+  units: string
 }
 
-function getHeaviestPlate({ targetWeight }: IGetHeaviestPlate): number {
-  const availablePlates = [...DEFAULT_AVAILABLE_PLATES]
+function getHeaviestPlate({ targetWeight, units }: IGetHeaviestPlate): number {
+  const availablePlates = [...DEFAULT_AVAILABLE_PLATES[units]]
   for (let plate of availablePlates) {
     if (plate <= targetWeight) {
       return plate
@@ -36,16 +45,17 @@ function getHeaviestPlate({ targetWeight }: IGetHeaviestPlate): number {
 // Function to get a list of plates where the bar + all plates = target weight
 export function getPlatesForWeight({
   targetWeight,
-  barWeight = DEFAULT_BAR_WEIGHT,
+  units,
+  barWeight = DEFAULT_BAR_WEIGHT[units],
 }: IGetPlatesForWeight): number[] {
-  const availablePlates = [...DEFAULT_AVAILABLE_PLATES]
+  const availablePlates = [...DEFAULT_AVAILABLE_PLATES[units]]
   // make sure availableWeights is sorted descending so we can start with bigger weights
   availablePlates.sort((a, b) => b - a)
 
   // just to make sure no one gets too strong or makes our Big O too big
   invariant(
-    targetWeight <= MAX_ALLOWED_WEIGHT,
-    `max allowed weight is ${MAX_ALLOWED_WEIGHT}`
+    targetWeight <= MAX_ALLOWED_WEIGHT[units],
+    `max allowed weight is ${MAX_ALLOWED_WEIGHT[units]}`
   )
 
   // throw if we have less weight than the bar
@@ -70,6 +80,7 @@ export function getPlatesForWeight({
     // find the heaviest plate that fits the current weight
     let heaviestPlate = getHeaviestPlate({
       targetWeight: oneSideWeight,
+      units,
     })
     plates.push(heaviestPlate)
     oneSideWeight = oneSideWeight - heaviestPlate
@@ -82,13 +93,13 @@ export function getSets({
   numSets = 5,
   startWeight,
   workWeight,
+  units,
 }: IGetSetsProps): number[] {
   // function to get the weights for a list of warmup sets and one work set
 
-  let availablePlates = [...DEFAULT_AVAILABLE_PLATES]
+  let availablePlates = [...DEFAULT_AVAILABLE_PLATES[units]]
   // if we have available plates, sort from largest to smallers
   availablePlates = availablePlates.sort((a, b) => b - a)
-  console.log('in sets, DEFAULT_AVAILABLE_PLATES is ', DEFAULT_AVAILABLE_PLATES)
 
   // we don't want to deal with teensy weights for work sets, so remove the smallest if it's fractional
 

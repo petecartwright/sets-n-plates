@@ -7,21 +7,18 @@ import {
   DEFAULT_BAR_WEIGHT,
   MAX_ALLOWED_WEIGHT,
 } from '@/common/consts'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
 
 interface ISetFormState {
   barWeight: string
   startWeight: string
   workWeight: string
+  units: string
 }
 
 interface IValidationResults {
   [key: string]: { isValid: boolean; message: string }[]
-}
-
-const INITIAL_VALUES: ISetFormState = {
-  barWeight: DEFAULT_BAR_WEIGHT.toString(),
-  startWeight: DEFAULT_BAR_WEIGHT.toString(),
-  workWeight: '',
 }
 
 // Validation pattern borrowed from Robin Wieruch's blog post here:
@@ -44,9 +41,10 @@ const VALIDATION: Record<string, any> = {
       message: 'Start weight must be less than work weight',
     },
     {
-      isValid: (formState: ISetFormState, value: string) =>
-        Number(value) <= MAX_ALLOWED_WEIGHT,
-      message: `Start weight must be less than or equal to ${MAX_ALLOWED_WEIGHT}`,
+      isValid: (formState: ISetFormState, value: string) => {
+        return Number(value) <= MAX_ALLOWED_WEIGHT[formState.units]
+      },
+      message: `Start weight must be less than or equal to ${MAX_ALLOWED_WEIGHT['pounds']} pounds or ${MAX_ALLOWED_WEIGHT['kilos']} kilos.`,
     },
   ],
   workWeight: [
@@ -67,8 +65,8 @@ const VALIDATION: Record<string, any> = {
     },
     {
       isValid: (formState: ISetFormState, value: string) =>
-        Number(value) <= MAX_ALLOWED_WEIGHT,
-      message: `Work weight must be less than or equal to ${MAX_ALLOWED_WEIGHT}`,
+        Number(value) <= MAX_ALLOWED_WEIGHT[formState.units],
+      message: `Work weight must be less than or equal to ${MAX_ALLOWED_WEIGHT['pounds']} pounds or ${MAX_ALLOWED_WEIGHT['kilos']} kilos.`,
     },
     {
       isValid: (formState: ISetFormState, value: string) => {
@@ -77,7 +75,11 @@ const VALIDATION: Record<string, any> = {
           let targetWeight = Number(value)
           let barWeight = Number(formState.barWeight)
 
-          getPlatesForWeight({ targetWeight, barWeight })
+          getPlatesForWeight({
+            targetWeight,
+            barWeight,
+            units: formState.units,
+          })
           return true
         } catch (err) {
           return false
@@ -122,24 +124,22 @@ function getErrorFields(
   return [errors, errorCount]
 }
 
-function isDirty(formState) {
-  // return true if any of the fields have changed from initial values
-  // false otherwise
-  // does not tell you which ones bc I don't care
-  const dirtyFields = Object.keys(formState)
-    .map((key) => {
-      // see what form fields don't have the initial values
-      const isDirty = formState[key] !== INITIAL_VALUES[key]
-      return isDirty
-    })
-    .filter((item) => item)
-  return dirtyFields.length > 0
-}
-
 export default function SetsPage() {
   const [sets, setSets] = useState<number[]>([])
-  const [formState, setFormState] = useState(INITIAL_VALUES)
+  const [isKilos, setIsKilos] = useState<boolean>(false)
 
+  const units = isKilos ? 'kilos' : 'pounds'
+
+  console.log('units', units)
+  console.log('isKilos', isKilos)
+
+  const INITIAL_VALUES: ISetFormState = {
+    barWeight: DEFAULT_BAR_WEIGHT[units].toString(),
+    startWeight: DEFAULT_BAR_WEIGHT[units].toString(),
+    workWeight: '',
+    units: units,
+  }
+  const [formState, setFormState] = useState(INITIAL_VALUES)
   const [errorFields, errorCount] = getErrorFields(formState)
   const dirty = isDirty(formState)
 
@@ -152,18 +152,32 @@ export default function SetsPage() {
     })
   }
 
+  function isDirty(formState) {
+    // return true if any of the fields have changed from initial values
+    // false otherwise
+    // does not tell you which ones bc I don't care
+    const dirtyFields = Object.keys(formState)
+      .map((key) => {
+        // see what form fields don't have the initial values
+        const isDirty = formState[key] !== INITIAL_VALUES[key]
+        return isDirty
+      })
+      .filter((item) => item)
+    return dirtyFields.length > 0
+  }
+
   useEffect(() => {
     let start = Number(formState.startWeight)
     let work = Number(formState.workWeight)
     if (start && work) {
       try {
-        let sets = getSets({ startWeight: start, workWeight: work })
+        let sets = getSets({ startWeight: start, workWeight: work, units })
         setSets(sets)
       } catch (err) {
         setSets([])
       }
     }
-  }, [formState.barWeight, formState.startWeight, formState.workWeight])
+  }, [formState.barWeight, formState.startWeight, formState.workWeight, units])
 
   return (
     <>
@@ -194,7 +208,7 @@ export default function SetsPage() {
                 onChange={handleChange}
                 defaultValue="45"
               >
-                {BAR_WEIGHT_OPTIONS.map((weightOption) => {
+                {BAR_WEIGHT_OPTIONS[units].map((weightOption) => {
                   return (
                     <option key={weightOption} value={weightOption}>
                       {weightOption}
@@ -219,7 +233,7 @@ export default function SetsPage() {
                 className="block uppercase tracking-wide font-bold text-xs text-gray-700 mb-2"
                 htmlFor="startWeight"
               >
-                Start Weight
+                Start Weight {units === 'pounds' ? '(lbs)' : '(kgs)'}
               </label>
               <input
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -241,7 +255,8 @@ export default function SetsPage() {
                 className="block uppercase tracking-wide font-bold text-xs text-gray-700 mb-2"
                 htmlFor="workWeight"
               >
-                Work Weight
+                {/* // TODO: maybe lose the units here */}
+                Work Weight {units === 'pounds' ? '(lbs)' : '(kgs)'}
               </label>
               <input
                 className="appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full"
@@ -265,10 +280,26 @@ export default function SetsPage() {
                     key={setWeight}
                     targetWeight={setWeight}
                     barWeight={Number(formState.barWeight)}
+                    units={units}
                   />
                 ))
               : null}
           </div>
+          <div>
+            <Label htmlFor="units" onClick={() => setIsKilos(false)}>
+              Pounds
+            </Label>
+            <Switch
+              id="weight-units"
+              name="units"
+              checked={isKilos}
+              onCheckedChange={setIsKilos}
+            />
+            <Label htmlFor="units" onClick={() => setIsKilos(true)}>
+              Kilos
+            </Label>
+          </div>
+          <input type="hidden" name="units" value={units} />
         </div>
 
         <div className="fixed bottom-5 left-[50%] -translate-x-2/4">

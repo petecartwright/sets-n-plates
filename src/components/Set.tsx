@@ -6,12 +6,12 @@ import { Plates } from './Plates'
 interface ISetProps {
   targetWeight: number
   barWeight: number
-
+  units: 'pounds' | 'kilos'
   availablePlates?: number[]
 }
 
 export function Set(props: ISetProps) {
-  const { barWeight, targetWeight, availablePlates } = props
+  const { barWeight, targetWeight, availablePlates, units } = props
 
   const [newWeight, setNewWeight] = useState<number>(targetWeight)
   const [plates, setPlates] = useState<number[]>([])
@@ -20,17 +20,19 @@ export function Set(props: ISetProps) {
     try {
       const plates = getPlatesForWeight({
         targetWeight: newWeight,
+        units,
         barWeight,
       })
       setPlates(plates)
     } catch (err) {
       setPlates([])
     }
-  }, [newWeight, barWeight, availablePlates])
+  }, [newWeight, barWeight, availablePlates, units])
 
   function bumpWeight(bump: 'up' | 'down') {
     if (bump === 'up') {
-      if (newWeight + 2.5 <= MAX_ALLOWED_WEIGHT) setNewWeight(newWeight + 2.5)
+      if (newWeight + 2.5 <= MAX_ALLOWED_WEIGHT[units])
+        setNewWeight(newWeight + 2.5)
     }
     if (bump === 'down') {
       if (newWeight - 2.5 >= barWeight) setNewWeight(newWeight - 2.5)
