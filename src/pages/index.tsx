@@ -233,7 +233,7 @@ export default function SetsPage() {
                 className="block uppercase tracking-wide font-bold text-xs text-gray-700 mb-2"
                 htmlFor="startWeight"
               >
-                Start Weight {units === 'pounds' ? '(lbs)' : '(kgs)'}
+                Start Weight
               </label>
               <input
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -255,8 +255,7 @@ export default function SetsPage() {
                 className="block uppercase tracking-wide font-bold text-xs text-gray-700 mb-2"
                 htmlFor="workWeight"
               >
-                {/* // TODO: maybe lose the units here */}
-                Work Weight {units === 'pounds' ? '(lbs)' : '(kgs)'}
+                Work Weight
               </label>
               <input
                 className="appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full"
