@@ -227,8 +227,8 @@ export default function SetsPage() {
               </div>
             </div>
           </div>
-          <div className="weightInputsContainer flex ">
-            <div className="startWeightContainer px-5 mb-6 ">
+          <div className="weightInputsContainer flex mb-6 ">
+            <div className="startWeightContainer px-5 ">
               <label
                 className="block uppercase tracking-wide font-bold text-xs text-gray-700 mb-2"
                 htmlFor="startWeight"
@@ -250,7 +250,7 @@ export default function SetsPage() {
               ) : null}
             </div>
 
-            <div className="workWeightContainer px-5 mb-6">
+            <div className="workWeightContainer px-5">
               <label
                 className="block uppercase tracking-wide font-bold text-xs text-gray-700 mb-2"
                 htmlFor="workWeight"
@@ -285,7 +285,16 @@ export default function SetsPage() {
                 ))
               : null}
           </div>
-          <div>
+          <div
+            className="
+                flex 
+                items-center
+                gap-4
+                align-middle
+                justify-center
+                mt-20
+            "
+          >
             <Label htmlFor="units" onClick={() => setIsKilos(false)}>
               Pounds
             </Label>
