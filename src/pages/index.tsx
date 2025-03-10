@@ -281,40 +281,7 @@ export default function SetsPage() {
                 ))
               : null}
           </div>
-          <div
-            className="
-                flex 
-                items-center
-                gap-4
-                align-middle
-                justify-center
-                mt-20
-            "
-          >
-            <Label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold"
-              htmlFor="units"
-              onClick={() => setIsKilos(false)}
-            >
-              Pounds
-            </Label>
-            <Switch
-              className="scale-150"
-              id="weight-units"
-              name="units"
-              checked={isKilos}
-              onCheckedChange={setIsKilos}
-            />
-            <Label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold"
-              htmlFor="units"
-              onClick={() => setIsKilos(true)}
-            >
-              Kilos
-            </Label>
-          </div>
-          <input type="hidden" name="units" value={units} />
-        </div>
+
 
         <div className="fixed bottom-5 left-[50%] -translate-x-2/4">
           <div className="text-xs flex-column text-center block tracking-wide text-gray-700 font-bold ">
