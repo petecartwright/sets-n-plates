@@ -296,6 +296,7 @@ export default function SetsPage() {
             </a>
           </div>
         </div>
+        </div>
       </main>
     </>
   )
