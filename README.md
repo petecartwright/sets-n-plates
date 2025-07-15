@@ -10,6 +10,4 @@ Built partially because I wanted it, and partially for a chance to check out [Ne
 
 Contributions always welcome! Please create an issue before opening a PR so we can discuss.
 
-Styling by [Tailwind](https://tailwindcss.com/)
-Testing by [Cypress](https://www.cypress.io/)
-CI by [GitHub Actions](https://github.com/features/actions)
+Styling by [Tailwind](https://tailwindcss.com/) | Testing by [Cypress](https://www.cypress.io/) | CI by [GitHub Actions](https://github.com/features/actions)
