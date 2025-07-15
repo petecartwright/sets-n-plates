@@ -44,7 +44,8 @@ const VALIDATION: Record<string, any> = {
       isValid: (formState: ISetFormState, value: string) => {
         return Number(value) <= MAX_ALLOWED_WEIGHT[formState.units]
       },
-      message: `Start weight must be less than or equal to ${MAX_ALLOWED_WEIGHT['pounds']} pounds or ${MAX_ALLOWED_WEIGHT['kilos']} kilos.`,
+      message: `Start weight must be less than or equal to ${MAX_ALLOWED_WEIGHT['pounds']} pounds`,
+      // message: `Start weight must be less than or equal to ${MAX_ALLOWED_WEIGHT['pounds']} pounds or ${MAX_ALLOWED_WEIGHT['kilos']} kilos.`,
     },
   ],
   workWeight: [
@@ -66,7 +67,8 @@ const VALIDATION: Record<string, any> = {
     {
       isValid: (formState: ISetFormState, value: string) =>
         Number(value) <= MAX_ALLOWED_WEIGHT[formState.units],
-      message: `Work weight must be less than or equal to ${MAX_ALLOWED_WEIGHT['pounds']} pounds or ${MAX_ALLOWED_WEIGHT['kilos']} kilos.`,
+      // message: `Work weight must be less than or equal to ${MAX_ALLOWED_WEIGHT['pounds']} pounds or ${MAX_ALLOWED_WEIGHT['kilos']} kilos.`,
+      message: `Work weight must be less than or equal to ${MAX_ALLOWED_WEIGHT['pounds']} pounds`,
     },
     {
       isValid: (formState: ISetFormState, value: string) => {
