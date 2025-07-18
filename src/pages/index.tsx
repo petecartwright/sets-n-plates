@@ -186,7 +186,7 @@ export default function SetsPage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="backgroundPattern h-screen">
-        <div className="w-full md:w-1/3 mx-auto">
+        <div className="w-full sm:w-1/2 mx-auto">
           <div className="flex justify-center py-10">
             <span className="text-5xl text-gray-700 font-bold">
               SETS&apos;N&apos;PLATES
@@ -226,8 +226,8 @@ export default function SetsPage() {
               </div>
             </div>
           </div>
-          <div className="weightInputsContainer flex mb-6 ">
-            <div className="startWeightContainer px-5 ">
+          <div className="weightInputsContainer flex mb-6 justify-around">
+            <div className="startWeightContainer px-5 w-full">
               <label
                 className="block uppercase tracking-wide font-bold text-xs text-gray-700 mb-2"
                 htmlFor="startWeight"
@@ -249,7 +249,7 @@ export default function SetsPage() {
               ) : null}
             </div>
 
-            <div className="workWeightContainer px-5">
+            <div className="workWeightContainer px-5 w-full">
               <label
                 className="block uppercase tracking-wide font-bold text-xs text-gray-700 mb-2"
                 htmlFor="workWeight"
@@ -283,7 +283,7 @@ export default function SetsPage() {
                 ))
               : null}
           </div>
-
+        </div>
 
         <div className="fixed bottom-5 left-[50%] -translate-x-2/4">
           <div className="text-xs flex-column text-center block tracking-wide text-gray-700 font-bold ">
@@ -297,7 +297,6 @@ export default function SetsPage() {
               Send me an email!
             </a>
           </div>
-        </div>
         </div>
       </main>
     </>
